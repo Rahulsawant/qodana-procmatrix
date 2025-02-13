@@ -25,11 +25,11 @@ public class MatrixRotationService {
      * @return the matrix data, or null if not found
      */
     public int[][] getMatrix(Long id) {
-        MatrixData matrix = matrixCacheRepository.getMatrix(id);
+        MatrixData matrix = matrixCacheRepository.get(id);
         if (matrix == null) {
             matrix = matrixReadRepository.findById(id);
             if (matrix != null) {
-                matrixCacheRepository.saveMatrix(id, matrix);
+                matrixCacheRepository.save(id, matrix);
             }
         }
         if (matrix == null) {

@@ -31,11 +31,11 @@ public class MatrixService {
      */
     public int[][] getMatrix(Long id) {
         // First, check the Redis cache
-        MatrixData matrix = matrixCacheRepository.getMatrix(id);
+        MatrixData matrix = matrixCacheRepository.get(id);
         if (matrix == null) {
             matrix = matrixReadRepository.findById(id);
             if (matrix != null) {
-                matrixCacheRepository.saveMatrix(id, matrix);
+                matrixCacheRepository.save(id, matrix);
             }
         }
         return matrix.getMatrix();
@@ -45,7 +45,6 @@ public class MatrixService {
      * Saves a matrix with the given ID.
      * Persists the matrix to Cassandra and updates the Redis cache.
      *
-     * @param id the ID of the matrix
      * @param matrix the matrix data
      */
     @Transactional
@@ -56,7 +55,7 @@ public class MatrixService {
         matrixData.setMatrix(matrix.getMatrix());
         matrixData=matrixWriteRepository.persist(matrixData);
         // Update the Redis cache
-        matrixCacheRepository.saveMatrix(matrixData.getId(), matrixData);
+        matrixCacheRepository.save(matrixData.getId(), matrixData);
         return matrixData;
     }
 
@@ -68,11 +67,7 @@ public class MatrixService {
      */
     @Transactional
     public boolean deleteMatrix(Long id) {
-        // Remove from Redis cache
-        if(matrixCacheRepository.deleteMatrix(id)){
-            //Deleted from the cache TODO
-        };
-        // Delete from Cassandra
+        matrixCacheRepository.remove(id);
         return matrixWriteRepository.delete(id);
     }
 }

@@ -1,10 +1,10 @@
 package com.procmatrix.entity;
 
 
-import jakarta.persistence.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.*;
+
 import java.io.IOException;
 
 @Entity

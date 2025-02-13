@@ -2,34 +2,48 @@ package com.procmatrix.implementation;
 
 import com.procmatrix.entity.MatrixData;
 import com.procmatrix.interfaces.repository.MatrixReadRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.cassandra.core.CassandraTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-@Service
-public class MatrixReadRepositoryImpl implements MatrixReadRepository<Long,MatrixData> {
+@Repository
+public class MatrixReadRepositoryImpl implements MatrixReadRepository<Long, MatrixData> {
 
-    @Autowired
-    private CassandraTemplate cassandraTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-    @Override
-    public Iterable<MatrixData> findAll() {
-        return cassandraTemplate.select("SELECT * FROM matrix_data", MatrixData.class);
+    public MatrixReadRepositoryImpl(@Qualifier("customJdbcTemplate")  NamedParameterJdbcTemplate  namedJdbcTemplate) {
+        this.namedJdbcTemplate = namedJdbcTemplate;
+    }
+
+    private static final class MatrixDataRowMapper implements RowMapper<MatrixData> {
+        @Override
+        public MatrixData mapRow(ResultSet rs, int rowNum) throws SQLException {
+            MatrixData matrixData = new MatrixData();
+            matrixData.setId(rs.getLong("id"));
+            matrixData.setData(rs.getString("data"));
+            return matrixData;
+        }
     }
 
     @Override
     public MatrixData findById(Long id) {
-        return cassandraTemplate.selectOneById(id, MatrixData.class);
+        String sql = "SELECT * FROM matrix WHERE id = :id";
+        return namedJdbcTemplate.queryForObject(sql, Collections.singletonMap("id", id), new MatrixDataRowMapper());
+
     }
 
     @Override
     public boolean existsById(Long id) {
-        return cassandraTemplate.exists(id, MatrixData.class);
+        String sql = "SELECT COUNT(1) FROM matrix_data WHERE id = ?";
+        Integer count = namedJdbcTemplate.queryForObject(sql, Collections.singletonMap("id", id), Integer.class);
+        return count > 0;
     }
 
-    @Override
-    public long count() {
-        return cassandraTemplate.count(MatrixData.class);
-    }
 }

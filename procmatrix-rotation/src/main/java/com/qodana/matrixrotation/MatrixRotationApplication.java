@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.qodana.matrixrotation.config")
+@ComponentScan(basePackages = {"com.qodana.matrixrotation", "com.procmatrix"})
 public class MatrixRotationApplication {
 
 	public static void main(String[] args) {
