@@ -1,0 +1,37 @@
+image:
+  repository: bitnami/cassandra
+  tag: latest
+
+cassandra:
+  password: cassandra
+resources:
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "2Gi"
+
+livenessProbe:
+  initialDelaySeconds: 120
+  periodSeconds: 30
+  timeoutSeconds: 10
+  failureThreshold: 5
+  successThreshold: 1
+  exec:
+    command:
+      - /bin/bash
+      - -c
+      - "nodetool status"
+
+readinessProbe:
+  initialDelaySeconds: 120
+  periodSeconds: 30
+  timeoutSeconds: 10
+  failureThreshold: 5
+  successThreshold: 1
+  exec:
+    command:
+      - /bin/bash
+      - -c
+      - "nodetool status"
