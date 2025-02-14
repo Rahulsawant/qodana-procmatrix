@@ -1,4 +1,4 @@
-package com.procmatrix.config;
+package com.procmatrix.core.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

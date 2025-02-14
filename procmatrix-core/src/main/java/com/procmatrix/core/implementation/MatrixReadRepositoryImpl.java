@@ -1,7 +1,7 @@
-package com.procmatrix.implementation;
+package com.procmatrix.core.implementation;
 
-import com.procmatrix.entity.MatrixData;
-import com.procmatrix.interfaces.repository.MatrixReadRepository;
+import com.procmatrix.core.entity.MatrixData;
+import com.procmatrix.core.interfaces.repository.MatrixReadRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 @Repository
 public class MatrixReadRepositoryImpl implements MatrixReadRepository<Long, MatrixData> {
@@ -27,14 +25,14 @@ public class MatrixReadRepositoryImpl implements MatrixReadRepository<Long, Matr
         public MatrixData mapRow(ResultSet rs, int rowNum) throws SQLException {
             MatrixData matrixData = new MatrixData();
             matrixData.setId(rs.getLong("id"));
-            matrixData.setData(rs.getString("data"));
+            matrixData.setData(new String(rs.getBytes("data")));
             return matrixData;
         }
     }
 
     @Override
     public MatrixData findById(Long id) {
-        String sql = "SELECT * FROM matrix WHERE id = :id";
+        String sql = "SELECT * FROM matrix_data WHERE id = :id";
         return namedJdbcTemplate.queryForObject(sql, Collections.singletonMap("id", id), new MatrixDataRowMapper());
 
     }
@@ -45,5 +43,4 @@ public class MatrixReadRepositoryImpl implements MatrixReadRepository<Long, Matr
         Integer count = namedJdbcTemplate.queryForObject(sql, Collections.singletonMap("id", id), Integer.class);
         return count > 0;
     }
-
 }

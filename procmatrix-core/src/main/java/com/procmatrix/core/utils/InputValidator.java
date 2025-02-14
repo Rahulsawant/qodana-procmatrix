@@ -1,6 +1,6 @@
-package com.procmatrix.utils;
+package com.procmatrix.core.utils;
 
-import com.procmatrix.entity.MatrixRequest;
+import com.procmatrix.core.entity.MatrixRequest;
 
 public class InputValidator {
 

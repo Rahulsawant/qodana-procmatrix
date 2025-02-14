@@ -1,10 +1,11 @@
 package com.qodana.procmatrix.controller;
 
-import com.procmatrix.utils.InputValidator;
+import com.procmatrix.core.utils.InputValidator;
 import com.qodana.procmatrix.service.MatrixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class MatrixAdditionController {
      * @return the resulting matrix wrapped in an EntityModel with HATEOAS links
      */
     @GetMapping("/add/{id1}/{id2}")
+    @PreAuthorize("hasRole('CREATE') or hasRole('OPERATIONS')")
     public EntityModel<int[][]> addMatrices(@PathVariable Long id1, @PathVariable Long id2) {
         InputValidator.validateId(id1);
         InputValidator.validateId(id2);

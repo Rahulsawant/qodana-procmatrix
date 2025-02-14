@@ -1,13 +1,13 @@
-package com.procmatrix.implementation;
+package com.procmatrix.core.implementation;
 
-import com.procmatrix.entity.MatrixData;
-import com.procmatrix.interfaces.repository.MatrixCacheRepository;
+import com.procmatrix.core.entity.MatrixData;
+import com.procmatrix.core.interfaces.repository.MatrixCacheRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MatrixCacheRepositoryImpl implements MatrixCacheRepository<Long,MatrixData> {
+public class MatrixCacheRepositoryImpl implements MatrixCacheRepository<Long, MatrixData> {
 
     private final CacheManager cacheManager;
     @Autowired

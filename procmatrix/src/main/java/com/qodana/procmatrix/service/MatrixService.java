@@ -1,10 +1,10 @@
 package com.qodana.procmatrix.service;
 
-import com.procmatrix.entity.MatrixData;
-import com.procmatrix.entity.MatrixRequest;
-import com.procmatrix.interfaces.repository.MatrixCacheRepository;
-import com.procmatrix.interfaces.repository.MatrixReadRepository;
-import com.procmatrix.interfaces.repository.MatrixWriteRepository;
+import com.procmatrix.core.entity.MatrixData;
+import com.procmatrix.core.entity.MatrixRequest;
+import com.procmatrix.core.interfaces.repository.MatrixCacheRepository;
+import com.procmatrix.core.interfaces.repository.MatrixReadRepository;
+import com.procmatrix.core.interfaces.repository.MatrixWriteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class MatrixService {
+    private final MatrixCacheRepository<Long, MatrixData> matrixCacheRepository;
+    private final MatrixWriteRepository<Long,MatrixData> matrixWriteRepository;
+    private final MatrixReadRepository<Long,MatrixData> matrixReadRepository;
+
     @Autowired
-    private MatrixCacheRepository<Long, MatrixData> matrixCacheRepository;
-    @Autowired
-    private MatrixWriteRepository<Long,MatrixData> matrixWriteRepository;
-    @Autowired
-    private MatrixReadRepository<Long,MatrixData> matrixReadRepository;
+    public MatrixService(MatrixCacheRepository<Long, MatrixData> matrixCacheRepository,
+                         MatrixWriteRepository<Long, MatrixData> matrixWriteRepository,
+                         MatrixReadRepository<Long, MatrixData> matrixReadRepository) {
+        this.matrixCacheRepository = matrixCacheRepository;
+        this.matrixWriteRepository = matrixWriteRepository;
+        this.matrixReadRepository = matrixReadRepository;
+    }
+
 
     /**
      * Retrieves a matrix by its ID.
@@ -33,7 +40,7 @@ public class MatrixService {
         // First, check the Redis cache
         MatrixData matrix = matrixCacheRepository.get(id);
         if (matrix == null) {
-            matrix = matrixReadRepository.findById(id);
+            matrix= matrixReadRepository.findById(id);
             if (matrix != null) {
                 matrixCacheRepository.save(id, matrix);
             }

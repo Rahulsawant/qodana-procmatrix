@@ -1,4 +1,4 @@
-package com.procmatrix.interfaces.repository;
+package com.procmatrix.core.interfaces.repository;
 
 
 public interface MatrixWriteRepository<ID,T>{

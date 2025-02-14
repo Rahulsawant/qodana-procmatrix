@@ -1,12 +1,15 @@
-package com.procmatrix.implementation;
+package com.procmatrix.core.implementation;
 
-import com.procmatrix.entity.MatrixData;
-import com.procmatrix.interfaces.repository.MatrixWriteRepository;
+import com.procmatrix.core.entity.MatrixData;
+import com.procmatrix.core.interfaces.repository.MatrixWriteRepository;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
+
+import java.sql.Types;
 
 @Service
 public class MatrixWriteRepositoryImpl implements MatrixWriteRepository<Long, MatrixData> {
@@ -21,7 +24,7 @@ public class MatrixWriteRepositoryImpl implements MatrixWriteRepository<Long, Ma
     public MatrixData persist(MatrixData matrixData) {
         String sql = "INSERT INTO matrix_data (data) VALUES (:data)";
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("data", matrixData.getData());
+                .addValue("data", new SqlLobValue(matrixData.getData().getBytes()), Types.BLOB);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
         matrixData.setId(keyHolder.getKey().longValue());

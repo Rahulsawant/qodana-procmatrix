@@ -1,15 +1,16 @@
 package com.qodana.procmatrix.controller;
 
-import com.procmatrix.entity.MatrixData;
-import com.procmatrix.entity.MatrixRequest;
-import com.procmatrix.entity.MatrixResponse;
-import com.procmatrix.utils.InputValidator;
+import com.procmatrix.core.entity.MatrixData;
+import com.procmatrix.core.entity.MatrixRequest;
+import com.procmatrix.core.entity.MatrixResponse;
+import com.procmatrix.core.utils.InputValidator;
 import com.qodana.procmatrix.service.MatrixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MatrixController {
      * @return the matrix data wrapped in an EntityModel with HATEOAS links
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('CREATE') OR hasRole('READ') OR hasRole('OPERATIONS')")
     public ResponseEntity<MatrixResponse> getMatrix(@PathVariable(name="id") Long id) {
         InputValidator.validateId(id);
         int[][] matrix = matrixService.getMatrix(id);
@@ -46,6 +48,7 @@ public class MatrixController {
      * @return a confirmation message wrapped in an EntityModel with HATEOAS links
      */
     @PostMapping
+    @PreAuthorize("hasRole('CREATE')")
     public ResponseEntity<MatrixResponse> saveMatrix(@RequestBody MatrixRequest matrix) {
         try {
             InputValidator.validateMatrixRequest(matrix);
@@ -70,6 +73,7 @@ public class MatrixController {
      * @return a confirmation message wrapped in an EntityModel with HATEOAS links
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('CREATE')")
     public ResponseEntity<String> deleteMatrix(@PathVariable(name="id") Long id) {
         InputValidator.validateId(id);
         if(matrixService.deleteMatrix(id)){

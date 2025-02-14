@@ -1,4 +1,4 @@
-package com.procmatrix.utils;
+package com.procmatrix.core.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

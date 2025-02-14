@@ -1,4 +1,4 @@
-package com.procmatrix.entity;
+package com.procmatrix.core.entity;
 
 public class MatrixRequest {
     private int[][] matrix;

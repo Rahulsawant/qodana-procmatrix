@@ -1,4 +1,4 @@
-package com.procmatrix.config;
+package com.procmatrix.core.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

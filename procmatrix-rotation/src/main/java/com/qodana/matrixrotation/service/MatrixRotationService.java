@@ -1,8 +1,8 @@
 package com.qodana.matrixrotation.service;
 
-import com.procmatrix.entity.MatrixData;
-import com.procmatrix.interfaces.repository.MatrixCacheRepository;
-import com.procmatrix.interfaces.repository.MatrixReadRepository;
+import com.procmatrix.core.entity.MatrixData;
+import com.procmatrix.core.interfaces.repository.MatrixCacheRepository;
+import com.procmatrix.core.interfaces.repository.MatrixReadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

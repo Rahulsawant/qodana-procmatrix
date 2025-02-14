@@ -1,7 +1,7 @@
 package com.qodana.procmatrix.controller;
 
-import com.procmatrix.entity.MatrixData;
-import com.procmatrix.entity.MatrixRequest;
+import com.procmatrix.core.entity.MatrixData;
+import com.procmatrix.core.entity.MatrixRequest;
 import com.qodana.procmatrix.config.TestSecurityConfig;
 import com.qodana.procmatrix.service.MatrixService;
 import org.junit.jupiter.api.Test;

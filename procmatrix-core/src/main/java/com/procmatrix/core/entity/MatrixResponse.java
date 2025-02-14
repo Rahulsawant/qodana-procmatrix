@@ -1,4 +1,4 @@
-package com.procmatrix.entity;
+package com.procmatrix.core.entity;
 
 import org.springframework.hateoas.Link;
 

@@ -1,15 +1,13 @@
 package com.qodana.matrixrotation.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.procmatrix.entity.MatrixResponse;
+import com.procmatrix.core.entity.MatrixResponse;
 import com.qodana.matrixrotation.service.MatrixRotationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -38,6 +36,7 @@ public class MatrixRotationController {
     }*/
 
     @GetMapping("/rotate/{id}")
+    @PreAuthorize("hasRole('CREATE') or hasRole('OPERATIONS')")
     public ResponseEntity<MatrixResponse> rotateMatrix(@PathVariable(name="id") Long id) {
         int[][] matrix = matrixRotationService.getMatrix(id);
         int[][] rotatedMatrix = rotateMatrix(matrix);
