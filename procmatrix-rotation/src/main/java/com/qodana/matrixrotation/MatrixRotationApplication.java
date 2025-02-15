@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.qodana.matrixrotation", "com.procmatrix"})
-@PropertySource({"classpath:application.properties", "classpath:procmatrix-core/application.properties"})
+@PropertySource({"classpath:application-core.properties", "classpath:application.properties"})
 
 public class MatrixRotationApplication {
 

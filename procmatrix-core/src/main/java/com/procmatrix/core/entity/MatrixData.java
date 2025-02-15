@@ -6,11 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 @Entity
 //@Document(collection = "matrix_entity") // TODO for noSql
-public class MatrixData {
-
+public class MatrixData implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

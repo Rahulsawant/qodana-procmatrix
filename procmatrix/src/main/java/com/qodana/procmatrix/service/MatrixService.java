@@ -2,9 +2,9 @@ package com.qodana.procmatrix.service;
 
 import com.procmatrix.core.entity.MatrixData;
 import com.procmatrix.core.entity.MatrixRequest;
-import com.procmatrix.core.interfaces.repository.MatrixCacheRepository;
-import com.procmatrix.core.interfaces.repository.MatrixReadRepository;
-import com.procmatrix.core.interfaces.repository.MatrixWriteRepository;
+import com.procmatrix.core.interfaces.MatrixCacheRepository;
+import com.procmatrix.core.interfaces.MatrixReadRepository;
+import com.procmatrix.core.interfaces.MatrixWriteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

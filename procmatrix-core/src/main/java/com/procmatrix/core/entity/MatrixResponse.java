@@ -1,9 +1,11 @@
 package com.procmatrix.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.hateoas.Link;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MatrixResponse {
     private int[][] content;
     private String message;

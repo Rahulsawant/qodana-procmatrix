@@ -1,4 +1,4 @@
-package com.procmatrix.core.interfaces.repository;
+package com.procmatrix.core.interfaces;
 
 
 public interface MatrixCacheRepository<ID,T> {
