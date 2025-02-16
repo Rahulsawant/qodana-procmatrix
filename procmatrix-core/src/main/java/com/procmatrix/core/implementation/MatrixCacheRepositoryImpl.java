@@ -25,9 +25,10 @@ public class MatrixCacheRepositoryImpl implements MatrixCacheRepository<Long, Ma
     @Override
     public MatrixData get(Long id) {
         try {
-            return (MatrixData) this.cache.get(id);
+            Cache.ValueWrapper valueWrapper = this.cache.get(id);
+            return (MatrixData) valueWrapper.get();
         } catch (DataAccessException | NullPointerException e) {
-            logger.error(String.format(ERROR_GETTING_MATRIX_FROM_CACHE,id, e.getMessage()));
+            logger.error(String.format(ERROR_GETTING_MATRIX_FROM_CACHE, id, e.getMessage()));
             return null;
         }
     }

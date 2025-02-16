@@ -5,6 +5,8 @@ import com.procmatrix.core.entity.MatrixRequest;
 import com.procmatrix.core.interfaces.MatrixCacheRepository;
 import com.procmatrix.core.interfaces.MatrixReadRepository;
 import com.procmatrix.core.interfaces.MatrixWriteRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class MatrixService {
+    private static final Logger logger = LoggerFactory.getLogger(MatrixService.class);
+
     private final MatrixCacheRepository<Long, MatrixData> matrixCacheRepository;
-    private final MatrixWriteRepository<Long,MatrixData> matrixWriteRepository;
-    private final MatrixReadRepository<Long,MatrixData> matrixReadRepository;
+    private final MatrixWriteRepository<Long, MatrixData> matrixWriteRepository;
+    private final MatrixReadRepository<Long, MatrixData> matrixReadRepository;
 
     @Autowired
     public MatrixService(MatrixCacheRepository<Long, MatrixData> matrixCacheRepository,
@@ -27,7 +31,6 @@ public class MatrixService {
         this.matrixReadRepository = matrixReadRepository;
     }
 
-
     /**
      * Retrieves a matrix by its ID.
      * First checks the Redis cache, and if not found, checks Cassandra.
@@ -37,44 +40,67 @@ public class MatrixService {
      * @return the matrix data, or null if not found
      */
     public int[][] getMatrix(Long id) {
-        // First, check the Redis cache
-        MatrixData matrix = matrixCacheRepository.get(id);
-        if (matrix == null) {
-            matrix= matrixReadRepository.findById(id);
-            if (matrix != null) {
-                matrixCacheRepository.save(id, matrix);
+        logger.debug("Retrieving matrix with ID {}", id);
+        try {
+            MatrixData matrix = matrixCacheRepository.get(id);
+            if (matrix == null) {
+                // If not found in cache, check Cassandra
+                matrix = matrixReadRepository.findById(id);
+                if (matrix != null) {
+                    // Update the cache
+                    matrixCacheRepository.save(id, matrix);
+                } else {
+                    logger.warn("Matrix with ID {} not found in cache or database", id);
+                    return null;
+                }
             }
+            logger.debug("Successfully retrieved matrix with ID {}", id);
+            return matrix.getMatrix();
+        } catch (Exception e) {
+            logger.error("Error retrieving matrix with ID {}", id, e);
+            return null;
         }
-        return matrix.getMatrix();
     }
 
     /**
-     * Saves a matrix with the given ID.
-     * Persists the matrix to Cassandra and updates the Redis cache.
+     * Saves a matrix.
      *
-     * @param matrix the matrix data
+     * @param matrix the matrix to save
+     * @return the saved matrix data
      */
     @Transactional
-    //TODO : need to check if we can first store to cache & then DB
     public MatrixData saveMatrix(MatrixRequest matrix) {
-        // Save to Cassandra
-        MatrixData matrixData=new MatrixData();
-        matrixData.setMatrix(matrix.getMatrix());
-        matrixData=matrixWriteRepository.persist(matrixData);
-        // Update the Redis cache
-        matrixCacheRepository.save(matrixData.getId(), matrixData);
-        return matrixData;
+        logger.debug("Saving matrix");
+        try {
+            MatrixData matrixData = new MatrixData();
+            matrixData.setMatrix(matrix.getMatrix());
+            MatrixData savedMatrix = matrixWriteRepository.persist(matrixData);
+            if (savedMatrix != null) {
+                matrixCacheRepository.save(savedMatrix.getId(), savedMatrix);
+            }
+            logger.debug("Successfully saved matrix with ID {}", matrixData.getId());
+            return savedMatrix;
+        } catch (Exception e) {
+            logger.error("Error saving matrix", e);
+            return null;
+        }
     }
 
     /**
      * Deletes a matrix by its ID.
-     * Removes the matrix from the Redis cache and deletes it from Cassandra.
      *
      * @param id the ID of the matrix
+     * @return true if the matrix was deleted, false otherwise
      */
     @Transactional
     public boolean deleteMatrix(Long id) {
-        matrixCacheRepository.remove(id);
-        return matrixWriteRepository.delete(id);
+        logger.debug("Deleting matrix with ID {}", id);
+        try {
+            matrixCacheRepository.remove(id);
+            return matrixWriteRepository.delete(id);
+        } catch (Exception e) {
+            logger.error("Error deleting matrix with ID {}", id, e);
+            return false;
+        }
     }
 }

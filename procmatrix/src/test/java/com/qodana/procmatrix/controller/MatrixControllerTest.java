@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -31,6 +32,7 @@ public class MatrixControllerTest {
 
 
     @Test
+    @WithMockUser(username = "reader", roles = { "READ"})
     public void getMatrixReturnsMatrixWithValidId() throws Exception {
         int[][] matrix = {{1, 2}, {3, 4}};
         when(matrixService.getMatrix(1L)).thenReturn(matrix);
@@ -46,6 +48,7 @@ public class MatrixControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "reader", roles = { "READ"})
     public void getMatrixReturnsNotFoundForInvalidId() throws Exception {
         when(matrixService.getMatrix(999L)).thenReturn(null);
 
@@ -55,6 +58,7 @@ public class MatrixControllerTest {
 
 
     @Test
+    @WithMockUser(username = "creator", roles = {"CREATE"})
     public void deleteMatrixDeletesMatrixWithValidId() throws Exception {
         when(matrixService.deleteMatrix(1L)).thenReturn(true);
 
@@ -63,6 +67,7 @@ public class MatrixControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "creator", roles = {"CREATE"})
     public void deleteMatrixReturnsNotFoundForInvalidId() throws Exception {
         when(matrixService.deleteMatrix(999L)).thenReturn(false);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/matrix/999"))
@@ -70,6 +75,7 @@ public class MatrixControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "creator", roles = {"CREATE"})
     public void saveMatrixReturnsOkForValidRequest() throws Exception {
         MatrixRequest matrixRequest = new MatrixRequest();
         matrixRequest.setMatrix(new int[][]{{1, 2}, {3, 4}});
@@ -89,6 +95,7 @@ public class MatrixControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "creator", roles = {"CREATE"})
     public void saveMatrixReturnsBadRequestForInvalidRequest() throws Exception {
         String jsonRequest = "{\"matrix\":null}"; // Invalid input
 
@@ -99,6 +106,7 @@ public class MatrixControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "creator", roles = {"CREATE"})
     public void saveMatrixReturnsInternalServerErrorWhenSaveFails() throws Exception {
         MatrixRequest matrixRequest = new MatrixRequest();
         matrixRequest.setMatrix(new int[][]{{1, 2}, {3, 4}});

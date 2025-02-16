@@ -9,7 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @EnableCaching
 public class MatrixCacheConfig {
 
-    @Bean public CacheManager cacheManager() {
+    @Bean
+    public CacheManager cacheManager() {
         return new ConcurrentMapCacheManager("matrixCache");
     }
 }

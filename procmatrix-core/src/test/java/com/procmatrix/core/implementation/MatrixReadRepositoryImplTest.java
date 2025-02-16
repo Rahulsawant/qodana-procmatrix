@@ -20,7 +20,6 @@ import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
 @ContextConfiguration(classes = TestConfig.class)
-@ComponentScan(basePackages = "com.procmatrix.core.*")
 class MatrixReadRepositoryImplTest {
 
     @MockitoBean
@@ -28,6 +27,7 @@ class MatrixReadRepositoryImplTest {
 
     @Autowired
     private MatrixReadRepositoryImpl matrixReadRepository;
+
 
     @Test
     void testFindById_Success() {
