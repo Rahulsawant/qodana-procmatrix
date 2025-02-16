@@ -8,7 +8,7 @@
         <version>3.4.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.qodana.procmatrix</groupId>
+    <groupId>com.procmatrix</groupId>
     <artifactId>procmatrix</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>procmatrix</name>

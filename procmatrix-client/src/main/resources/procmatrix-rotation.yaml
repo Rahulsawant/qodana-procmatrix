@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: Matrix Rotation API
+  description: API for matrix rotation operations
+  version: 1.0.0
+tags:
+  - name: Matrix Rotation API
+    description: API for matrix rotation operations
+paths:
+  /api/matrix/rotate/{id}:
+    get:
+      tags:
+        - Matrix Rotation API
+      summary: Rotate matrix by ID
+      description: Rotate a matrix by its ID
+      operationId: rotateMatrixById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the matrix to rotate
+          schema:
+            type: integer
+            format: int64
+        - name: degree
+          in: query
+          required: true
+          description: Degree to rotate the matrix (must be a multiple of 90)
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Matrix rotated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatrixResponse'
+        '400':
+          description: Invalid degree supplied
+        '404':
+          description: Matrix not found
+        '500':
+          description: Internal server error
+  /api/matrix/rotate:
+    post:
+      tags:
+        - Matrix Rotation API
+      summary: Rotate matrix
+      description: Rotate a matrix provided in the request body
+      operationId: rotateMatrix
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RotateMatrixRequest'
+      responses:
+        '200':
+          description: Matrix rotated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatrixResponse'
+        '400':
+          description: Invalid matrix data supplied
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    MatrixResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        message:
+          type: string
+        matrix:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+    RotateMatrixRequest:
+      type: object
+      properties:
+        matrix:
+          $ref: '#/components/schemas/MatrixRequest'
+        degree:
+          type: integer
+          description: Degree to rotate the matrix (must be a multiple of 90)
+    MatrixRequest:
+      type: object
+      properties:
+        matrix:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
