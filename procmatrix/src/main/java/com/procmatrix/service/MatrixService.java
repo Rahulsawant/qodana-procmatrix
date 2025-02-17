@@ -104,13 +104,22 @@ public class MatrixService {
         }
     }
 
+    /**
+     * Adds two matrices, handling matrices of different dimensions by filling missing elements with zeros.
+     * @param matrix1 the first matrix to add
+     * @param matrix2 the second matrix to add
+     * @return the resulting matrix after addition
+     */
     public int[][] addMatrices(int[][] matrix1, int[][] matrix2) {
-        int rows = matrix1.length;
-        int cols = matrix1[0].length;
+        int rows = Math.max(matrix1.length, matrix2.length);
+        int cols = Math.max(matrix1[0].length, matrix2[0].length);
         int[][] result = new int[rows][cols];
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                result[i][j] = matrix1[i][j] + matrix2[i][j];
+                int val1 = (i < matrix1.length && j < matrix1[i].length) ? matrix1[i][j] : 0;
+                int val2 = (i < matrix2.length && j < matrix2[i].length) ? matrix2[i][j] : 0;
+                result[i][j] = val1 + val2;
             }
         }
         return result;

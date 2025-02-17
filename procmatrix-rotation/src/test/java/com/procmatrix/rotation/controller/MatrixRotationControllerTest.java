@@ -103,10 +103,10 @@ class MatrixRotationControllerTest {
     }
 
     @Test
-    void unauthorizedAccess_Returns401() throws Exception {
+    void unauthorizedAccess_Returns403() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/matrix/rotate/1")
                         .param("degree", "90"))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
 

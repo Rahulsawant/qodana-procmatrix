@@ -140,12 +140,38 @@ class MatrixServiceTest {
     }
 
     @Test
-    void addMatrices_InvalidMatrices_ThrowsException() {
-        int[][] matrix1 = {{1, 2}, {3}};
-        int[][] matrix2 = {{5, 6}, {7, 8}};
+    void addMatrices_4x1Matrices_ReturnsSumMatrix() {
+        int[][] matrix1 = {{1}, {2}, {3}, {4}};
+        int[][] matrix2 = {{4}, {3}, {2}, {1}};
+        int[][] expectedResult = {{5}, {5}, {5}, {5}};
 
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
-            matrixService.addMatrices(matrix1, matrix2);
-        });
+        int[][] result = matrixService.addMatrices(matrix1, matrix2);
+
+        assertNotNull(result);
+        assertArrayEquals(expectedResult, result);
+    }
+
+    @Test
+    void addMatrices_DifferentDimensions_ReturnsSumMatrix() {
+        int[][] matrix1 = {{1, 2, 3}, {4, 5, 6}};
+        int[][] matrix2 = {{7, 8}, {9, 10}};
+        int[][] expectedResult = {{8, 10, 3}, {13, 15, 6}};
+
+        int[][] result = matrixService.addMatrices(matrix1, matrix2);
+
+        assertNotNull(result);
+        assertArrayEquals(expectedResult, result);
+    }
+
+    @Test
+    void addMatrices_DifferentRowCount_ReturnsSumMatrix() {
+        int[][] matrix1 = {{1, 2}, {3, 4}, {5, 6}};
+        int[][] matrix2 = {{7, 8}, {9, 10}};
+        int[][] expectedResult = {{8, 10}, {12, 14}, {5, 6}};
+
+        int[][] result = matrixService.addMatrices(matrix1, matrix2);
+
+        assertNotNull(result);
+        assertArrayEquals(expectedResult, result);
     }
 }

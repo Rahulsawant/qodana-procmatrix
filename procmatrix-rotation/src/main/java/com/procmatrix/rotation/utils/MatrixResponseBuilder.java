@@ -13,9 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MatrixResponseBuilder {
+
+    private MatrixResponseBuilder(){}
     private static final Logger logger = LoggerFactory.getLogger(MatrixResponseBuilder.class);
 
     public static MatrixResponse buildMatrixResponse(int[][] matrix, Long id, String message) {
+        if(id==null){
+            return new MatrixResponse(matrix, null, message);
+        }
         List<Link> links = new ArrayList<>();
         links.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MatrixRotationController.class).rotateMatrix(id, 90)).withRel("rotate-90"));
         links.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MatrixRotationController.class).rotateMatrix(id, 180)).withRel("rotate-180"));
@@ -33,7 +38,7 @@ public class MatrixResponseBuilder {
     public static ResponseEntity<MatrixResponse> buildNotFoundResponse(Long id) {
         logger.warn("Matrix with ID {} not found", id);
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(buildMatrixResponse(null, id, ResponseMessages.MATRIX_NOT_FOUND));
+                .body(buildMatrixResponse(null, null, ResponseMessages.MATRIX_NOT_FOUND));
     }
 
     public static ResponseEntity<MatrixResponse> buildBadRequestResponse(Long id, IllegalArgumentException e) {

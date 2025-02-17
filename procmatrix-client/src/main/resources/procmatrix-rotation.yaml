@@ -70,22 +70,27 @@ components:
     MatrixResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        content:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
         message:
           type: string
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+    RotateMatrixRequest:
+      type: object
+      properties:
         matrix:
           type: array
           items:
             type: array
             items:
               type: integer
-    RotateMatrixRequest:
-      type: object
-      properties:
-        matrix:
-          $ref: '#/components/schemas/MatrixRequest'
         degree:
           type: integer
           description: Degree to rotate the matrix (must be a multiple of 90)
@@ -98,3 +103,10 @@ components:
             type: array
             items:
               type: integer
+    Link:
+      type: object
+      properties:
+        rel:
+          type: string
+        href:
+          type: string

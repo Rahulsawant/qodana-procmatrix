@@ -4,15 +4,11 @@ package com.procmatrix.core.entity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
-
 import java.io.IOException;
-import java.io.Serializable;
 
-@Entity
-//@Document(collection = "matrix_entity") // TODO for noSql
+
 public class MatrixData {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long id;
 
     @Lob

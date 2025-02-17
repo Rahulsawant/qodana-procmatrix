@@ -46,7 +46,7 @@ public class MatrixReadRepositoryImpl implements MatrixReadRepository<Long, Matr
         try {
             return namedJdbcTemplate.queryForObject(MatrixSqlStatements.FIND_BY_ID, Collections.singletonMap("id", id), new MatrixDataRowMapper());
         }catch(EmptyResultDataAccessException e){
-            logger.error(String.format(ERROR_DATA_NOT_FOUND ,id, e.getMessage()));
+            logger.debug(String.format(ERROR_DATA_NOT_FOUND ,id, e.getMessage()));
             return null;
         } catch (DataAccessException e  ) {
             logger.error(String.format(ERROR_FINDING_MATRIX, id, e));

@@ -64,22 +64,40 @@ public class MatrixRotationService {
     }
 
 
+    /**
+     * Rotates a matrix by the specified degree.
+     *  1.first For 90° and 270° rotation, swap the rows and columns.
+     *  2.Iterate through each element, in a loop
+     *      2.1 190°: The element at (i, j) in the original matrix moves to (j, rows - 1 - i) in the rotated matrix.
+     *      2.2 180°: The element at (i, j) moves to (rows - 1 - i, cols - 1 - j).
+     *      2.3 270°: The element at (i, j) moves to (cols - 1 - j, i).
+     *      2.4 0° or 360°: The matrix remains unchanged.
+     * @param matrix the matrix to rotate
+     * @param degree the degree to rotate the matrix by
+     * @return the rotated matrix
+     */
     public int[][] rotateMatrix(int[][] matrix, int degree) {
         logger.debug("Rotating matrix by {} degrees", degree);
         try {
             if (degree % 90 != 0) {
                 throw new IllegalArgumentException("Degree must be a multiple of 90");
             }
-            int n = matrix.length;
-            int[][] rotatedMatrix = new int[n][n];
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
+            int rows = matrix.length;
+            int cols = matrix[0].length;
+            int[][] rotatedMatrix;
+            if (degree == 90 || degree == 270) {
+                rotatedMatrix = new int[cols][rows];
+            } else {
+                rotatedMatrix = new int[rows][cols];
+            }
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
                     if (degree == 90) {
-                        rotatedMatrix[j][n - 1 - i] = matrix[i][j];
+                        rotatedMatrix[j][rows - 1 - i] = matrix[i][j];
                     } else if (degree == 180) {
-                        rotatedMatrix[n - 1 - i][n - 1 - j] = matrix[i][j];
+                        rotatedMatrix[rows - 1 - i][cols - 1 - j] = matrix[i][j];
                     } else if (degree == 270) {
-                        rotatedMatrix[n - 1 - j][i] = matrix[i][j];
+                        rotatedMatrix[cols - 1 - j][i] = matrix[i][j];
                     } else {
                         rotatedMatrix[i][j] = matrix[i][j];
                     }

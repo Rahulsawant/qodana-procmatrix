@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @WebMvcTest(MatrixController.class)
 @Import(TestSecurityConfig.class)
 @ComponentScan(basePackages = "com.procmatrix.*")
-public class MatrixControllerTest {
+ class MatrixControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,7 +33,7 @@ public class MatrixControllerTest {
 
     @Test
     @WithMockUser(username = "reader", roles = { "READ"})
-    public void getMatrixReturnsMatrixWithValidId() throws Exception {
+     void getMatrixReturnsMatrixWithValidId() throws Exception {
         int[][] matrix = {{1, 2}, {3, 4}};
         when(matrixService.getMatrix(1L)).thenReturn(matrix);
 
@@ -49,7 +49,7 @@ public class MatrixControllerTest {
 
     @Test
     @WithMockUser(username = "reader", roles = { "READ"})
-    public void getMatrixReturnsNotFoundForInvalidId() throws Exception {
+     void getMatrixReturnsNotFoundForInvalidId() throws Exception {
         when(matrixService.getMatrix(999L)).thenReturn(null);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/matrix/999"))
@@ -59,7 +59,7 @@ public class MatrixControllerTest {
 
     @Test
     @WithMockUser(username = "creator", roles = {"CREATE"})
-    public void deleteMatrixDeletesMatrixWithValidId() throws Exception {
+     void deleteMatrixDeletesMatrixWithValidId() throws Exception {
         when(matrixService.deleteMatrix(1L)).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/matrix/1"))
@@ -68,7 +68,7 @@ public class MatrixControllerTest {
 
     @Test
     @WithMockUser(username = "creator", roles = {"CREATE"})
-    public void deleteMatrixReturnsNotFoundForInvalidId() throws Exception {
+     void deleteMatrixReturnsNotFoundForInvalidId() throws Exception {
         when(matrixService.deleteMatrix(999L)).thenReturn(false);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/matrix/999"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -76,7 +76,7 @@ public class MatrixControllerTest {
 
     @Test
     @WithMockUser(username = "creator", roles = {"CREATE"})
-    public void saveMatrixReturnsOkForValidRequest() throws Exception {
+     void saveMatrixReturnsOkForValidRequest() throws Exception {
         MatrixRequest matrixRequest = new MatrixRequest();
         matrixRequest.setMatrix(new int[][]{{1, 2}, {3, 4}});
         String jsonRequest = "{\"matrix\":[[1,2],[3,4]]}";
@@ -96,7 +96,7 @@ public class MatrixControllerTest {
 
     @Test
     @WithMockUser(username = "creator", roles = {"CREATE"})
-    public void saveMatrixReturnsBadRequestForInvalidRequest() throws Exception {
+     void saveMatrixReturnsBadRequestForInvalidRequest() throws Exception {
         String jsonRequest = "{\"matrix\":null}"; // Invalid input
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/matrix")
@@ -107,7 +107,7 @@ public class MatrixControllerTest {
 
     @Test
     @WithMockUser(username = "creator", roles = {"CREATE"})
-    public void saveMatrixReturnsInternalServerErrorWhenSaveFails() throws Exception {
+     void saveMatrixReturnsInternalServerErrorWhenSaveFails() throws Exception {
         MatrixRequest matrixRequest = new MatrixRequest();
         matrixRequest.setMatrix(new int[][]{{1, 2}, {3, 4}});
         String jsonRequest = "{\"matrix\":[[1,2],[3,4]]}";
