@@ -5,7 +5,6 @@ import com.procmatrix.core.entity.MatrixData;
 import com.procmatrix.core.utils.MatrixSqlStatements;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,6 +19,7 @@ import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
 @ContextConfiguration(classes = TestConfig.class)
+
 class MatrixReadRepositoryImplTest {
 
     @MockitoBean
