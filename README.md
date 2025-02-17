@@ -1,50 +1,95 @@
-Project contains mainly below repositories
-1. procmatrix-core - it contains library classes
-2. procmatrix - it contains spring boot application to provide matrix functionalities
-3. procmatrix-rotation - it contains matrix rotation functionality
-4. procmatrix-client- it contains client utility class to access apis
+# Project Overview
 
+This project contains the following repositories:
 
-Procmatrix Spring boot application handles below apis
-The MatrixController handle below three main apis:  
-- Retrieving a Matrix:  
-  Method: getMatrix
-  Endpoint: GET /api/matrix/{id}
-  Roles: CREATE, READ, OPERATIONS
-  Validates the matrix ID, retrieves the matrix using matrixService, and returns the matrix data. If not found, returns 404 NOT FOUND.
-- Saving a Matrix:  
-  Method: saveMatrix
-  Endpoint: POST /api/matrix
-  Role: CREATE
-  Validates the matrix data, saves it using matrixService, and returns the result. If validation fails, returns 400 BAD REQUEST. If save fails, returns 500 INTERNAL SERVER ERROR.
-- Deleting a Matrix:  
-  Method: deleteMatrix
-  Endpoint: DELETE /api/matrix/{id}
-  Role: CREATE
-  Validates the matrix ID, deletes the matrix using matrixService, and returns the status. If successful, returns 204 NO CONTENT. If not found, returns 404 NOT FOUND.
+1. **procmatrix-core**: Contains library classes.
+2. **procmatrix**: Contains a Spring Boot application to provide matrix functionalities.
+3. **procmatrix-rotation**: Contains matrix rotation functionality.
+4. **procmatrix-client**: Contains a client utility app to access APIs.
 
-The MatrixAdditionController handles below two apis:  
-- Adding Matrices by IDs:  
-  Method: addMatrices
-  Endpoint: GET /api/matrix/add/{id1}/{id2}
-  Roles: CREATE, OPERATIONS
-  Validates the matrix IDs, retrieves the matrices using matrixService, adds them, and returns the result wrapped in a MatrixResponse object. If any matrix is not found, returns a 404 NOT FOUND status.
-- Adding Matrices from Request Body:  
-  Method: addMatrices
-  Endpoint: POST /api/matrix/add
-  Roles: CREATE, OPERATIONS
-  Validates the matrices provided in the request body, adds them using matrixService, and returns the result wrapped in a MatrixResponse object. If validation fails, returns a 400 BAD REQUEST status.
+## Steps to Run the Applications
 
-procmatrix-rotation Spring boot application handles below apis
+1. Clone the repository:
+    ```sh
+    git clone <repository-url>
+    ```
+2. Change directory to the local folder:
+    ```sh
+    cd local
+    ```
+3. Give permission to the build_and_run.sh script:
+    ```sh
+    chmod +x build_and_run.sh
+    ```
+4. Run the script:
+    ```sh
+    ./build_and_run.sh
+    ```
 
-The MatrixRotationController includes two main methods:  
-- Rotating a Matrix by ID:  
-  Method: rotateMatrix
-  Endpoint: GET /api/matrix/rotate/{id}
-  Roles: CREATE, OPERATIONS
-  Validates the degree parameter, retrieves the matrix by ID using matrixRotationService, rotates it, and returns the rotated matrix wrapped in a MatrixResponse object. If the matrix is not found, returns a 404 NOT FOUND status.
-- Rotating a Matrix from Request Body:  
-  Method: rotateMatrix
-  Endpoint: POST /api/matrix/rotate
-  Roles: CREATE, OPERATIONS
-  Validates the matrix and degree provided in the request body, rotates the matrix using matrixRotationService, and returns the rotated matrix wrapped in a MatrixResponse object. If validation fails, returns a 400 BAD REQUEST status.
+## build_and_run.sh Script
+
+1. Builds all projects using Maven.
+2. Runs all the applications as separate processes so that we can access the APIs from the procmatrix-client application:
+    - **procmatrix** application runs on port 8080.
+    - **procmatrix-rotation** application runs on port 8081.
+    - **procmatrix-client** application runs on port 8082.
+3. Spring Boot applications will also run and use the H2 database and cache.
+
+## Accessing the APIs
+
+You can access the APIs either via an API tool (e.g., Postman) or using the procmatrix-client application. Basic Auth is enabled, so you need to provide credentials to access the APIs.
+
+## Design Considerations
+
+### Database
+
+- **H2 Database**: Used for lightweight and local testing. We can use any other database like Cassandra based on the requirements and load for scalability.
+- **Shared Database**: The database is shared between services to help with creation and running separate microservices.
+
+### Caching
+
+- **In-Memory Caching**: Added to store the matrix data for faster access.
+- **Shared Caching**: We can use shared caching between all our microservices like Redis, Hazelcast, etc., for better performance.
+
+### Endpoints
+
+- Services are running on different ports to access them separately for testing and local usage.
+- We can use an API gateway to access them via a single port along with load balancing.
+
+### Security
+
+- **Basic Auth**: Added for security to help validate access and local run. Details are in application-core.properties.
+- We can use OAuth2 for more secure access and token-based support.
+
+### Scaling and Performance
+
+- Created separate services for each functionality to help with scaling and maintenance.
+- We can use Kubernetes-based microservices for better scaling and management with functionalities like HPA, load balancing, etc.
+
+### Rotation API
+
+- When a user sends a matrix via a POST call, we store it in the database and cache it for future rotations.
+- When a user sends a matrix ID via a GET call, we retrieve the matrix from the database and cache it for future rotations.
+
+#### Considerations
+
+- We're rotating the original matrix but not storing it to prevent redundancy. With multiple requests, storing the same matrix after a 360-degree rotation could lead to duplicate data, consuming more resources for comparison and deduplication.
+
+#### For the Future
+
+- We can cache the rotated matrix with its ID, rotation angle, and the rotated matrix itself. If a user requests the same rotation again, we can retrieve it from the cache. Otherwise, we'll perform the rotation operation.
+- Alternatively, we could store the data in a separate table, including the matrix ID, rotation angle, and the rotated matrix data.
+- For very large data, we can add multipart file implementation to handle the data.
+
+### Addition API
+
+- When a user requests addition via a GET call with IDs, we add matrices and return the result. We don't cache the result as it's not required.
+- When a user requests addition via a POST call, we add two matrices and return the result. We don't store the new matrix in the database.
+
+#### Considerations
+
+- We're not storing the added matrix, as it is less likely to be used again. Storing it would consume more resources for comparison and deduplication.
+
+#### For the Future
+
+- If there is a business use case where we receive additions for the same matrices, we can store them in the cache or database, considering the effort required for comparison and deduplication.

@@ -1,13 +1,20 @@
 #!/bin/bash
 
-# Get the directory of the script and move to the parent directory
+# Get the directory of the script and move to the intended parent directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(dirname "${SCRIPT_DIR}")"
+echo "Script Directory: ${SCRIPT_DIR}"
+
+# Assuming the script is located in qodana-procmatrix/local, we need to go up two levels
+PARENT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+echo "Parent Directory: ${PARENT_DIR}"
+
 cd "${PARENT_DIR}"
 
 # Path to the custom settings.xml file
 SETTINGS_FILE="${SCRIPT_DIR}/settings.xml"
+echo "Settings File: ${SETTINGS_FILE}"
 
+# Function to run a Spring Boot app in a new terminal
 run_spring_boot_app() {
     local app_dir=$1
     local app_name=$2
@@ -28,7 +35,7 @@ run_spring_boot_app() {
 
 # Build all projects
 echo "Building all projects..."
-mvn clean install -DskipTests --settings ${SETTINGS_FILE}
+mvn clean install --settings ${SETTINGS_FILE}
 
 # Run procmatrix-core
 run_spring_boot_app "procmatrix" "procmatrix"
