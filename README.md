@@ -7,6 +7,9 @@ This project contains the following repositories:
 3. **procmatrix-rotation**: Contains matrix rotation functionality. please refer Link  procmatrix-rotation/README.md
 4. **procmatrix-client**: Contains a client utility app to access APIs. please refer Link procmatrix-clientREADME.md
    
+Below are the high level components for local system:
+![alt text]([http://url/to/img.png](https://github.com/Rahulsawant/qodana-procmatrix/blob/master/docs/procmatrix.png))
+
 
 ## Steps to Run the Applications
 
