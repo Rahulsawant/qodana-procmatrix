@@ -14,11 +14,7 @@ This project contains the following repositories:
     ```sh
     git clone <repository-url>
     ```
-2. Change directory to the local folder:
-    ```sh
-    cd local
-    ```
-3. Give permission to the build_and_run.sh script:
+2. Give permission to the build_and_run.sh script:
     ```sh
     chmod +x build_and_run.sh
     ```
@@ -26,6 +22,8 @@ This project contains the following repositories:
     ```sh
     ./build_and_run.sh
     ```
+5. alternately, we can run each service separately using 'mvn spring-boot:run'
+
 
 ## build_and_run.sh Script
 
@@ -35,6 +33,8 @@ This project contains the following repositories:
     - **procmatrix-rotation** application runs on port 8081.
     - **procmatrix-client** application runs on port 8082.
 3. Spring Boot applications will also run and use the H2 database and cache.
+   Note- h2 DB file 'matrixdb' is created at user root directory & shared by both the services, AUTO_SERVER=TRUE mode works fine windows.
+   Changes for shared db can be done at application-core.properties (spring.datasource.url)
 
 ## Accessing the APIs
 
