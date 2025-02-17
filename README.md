@@ -2,10 +2,11 @@
 
 This project contains the following repositories:
 
-1. **procmatrix-core**: Contains library classes.
-2. **procmatrix**: Contains a Spring Boot application to provide matrix functionalities.
-3. **procmatrix-rotation**: Contains matrix rotation functionality.
-4. **procmatrix-client**: Contains a client utility app to access APIs.
+1. **procmatrix-core**: Contains library classes. DB & Auth. details can be found at  application-core.properties
+2. **procmatrix**: Contains a Spring Boot application to provide matrix functionalities. please refer Link procmatrix/README.md
+3. **procmatrix-rotation**: Contains matrix rotation functionality. please refer Link  procmatrix-rotation/README.md
+4. **procmatrix-client**: Contains a client utility app to access APIs. please refer Link procmatrix-clientREADME.md
+   
 
 ## Steps to Run the Applications
 

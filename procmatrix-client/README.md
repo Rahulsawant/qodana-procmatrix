@@ -20,6 +20,13 @@ The procmatrix-client provides an abstraction to call procmatrix APIs.
     ```
 
 ## Functionalities
+   Below yaml files contains specification to call procmatrix & procmatrix-rotation apis, we auto generate client code using openApi generator
+
+    ```sh
+      resources/procmatrix-apis.yaml
+      resources/procmatrix-rotation.yaml
+    ```
+
 
 Choose an API to invoke:
 
