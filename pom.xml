@@ -11,5 +11,6 @@
         <module>procmatrix-core</module>
         <module>procmatrix</module>
         <module>procmatrix-rotation</module>
+        <module>procmatrix-client</module>
     </modules>
 </project>

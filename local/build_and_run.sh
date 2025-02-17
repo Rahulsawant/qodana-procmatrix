@@ -16,6 +16,8 @@ run_spring_boot_app() {
 
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         gnome-terminal -- bash -c "cd ${app_dir} && mvn spring-boot:run --settings ${SETTINGS_FILE}; exec bash" &
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        osascript -e "tell application \"Terminal\" to do script \"cd ${app_dir} && mvn spring-boot:run --settings ${SETTINGS_FILE}\""
     elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
         mintty -e bash -c "cd ${app_dir} && mvn spring-boot:run --settings ${SETTINGS_FILE}; exec bash" &
     else
