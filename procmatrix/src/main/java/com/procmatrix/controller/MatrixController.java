@@ -11,12 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import static com.procmatrix.utils.MatrixResponseBuilder.ResponseMessages.*;
 
-/**
- * REST controller for handling matrix operations.
- */
 @RestController
 @RequestMapping("/api/matrix")
 public class MatrixController {
@@ -24,12 +20,6 @@ public class MatrixController {
     @Autowired
     private MatrixService matrixService;
 
-    /**
-     * Retrieves a matrix by its ID.
-     *
-     * @param id the ID of the matrix to retrieve
-     * @return ResponseEntity containing the matrix data and status
-     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('CREATE') OR hasRole('READ') OR hasRole('OPERATIONS')")
     public ResponseEntity<MatrixResponse> getMatrix(@PathVariable(name="id") Long id) {
@@ -41,12 +31,6 @@ public class MatrixController {
         return ResponseEntity.ok(MatrixResponseBuilder.buildMatrixResponse(matrix, id, MATRIX_RETRIEVED_SUCCESSFULLY));
     }
 
-    /**
-     * Saves a new matrix.
-     *
-     * @param matrix the matrix data to save
-     * @return ResponseEntity containing the result of the save operation
-     */
     @PostMapping
     @PreAuthorize("hasRole('CREATE')")
     public ResponseEntity<MatrixResponse> saveMatrix(@RequestBody MatrixRequest matrix) {
@@ -63,12 +47,6 @@ public class MatrixController {
         return ResponseEntity.ok(MatrixResponseBuilder.buildMatrixResponse(null, matrixData.getId(), MATRIX_SAVED_SUCCESSFULLY));
     }
 
-    /**
-     * Deletes a matrix by its ID.
-     *
-     * @param id the ID of the matrix to delete
-     * @return ResponseEntity with the status of the delete operation
-     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('CREATE')")
     public ResponseEntity<String> deleteMatrix(@PathVariable(name="id") Long id) {

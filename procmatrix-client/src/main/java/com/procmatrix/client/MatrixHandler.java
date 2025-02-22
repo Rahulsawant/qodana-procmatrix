@@ -21,7 +21,11 @@ public class MatrixHandler {
             System.out.print("Enter Matrix ID: ");
             Long getId = scanner.nextLong();
             MatrixResponse getMatrix = matrixService.getMatrix(getId);
-            System.out.println("Matrix: " + getMatrix);
+            if (getMatrix != null && getMatrix.getContent() != null) {
+                System.out.println("Matrix: " + getMatrix);
+            } else {
+                System.out.println("matrix not found.");
+            }
         } catch (Exception e) {
             System.err.println("Error getting matrix: " + e.getMessage());
         }
@@ -33,7 +37,11 @@ public class MatrixHandler {
             String matrixData = scanner.nextLine();
             int[][] newMatrix = parseMatrix(matrixData);
             MatrixResponse savedMatrix = matrixService.saveMatrix(newMatrix);
-            System.out.println("Saved Matrix: " + savedMatrix);
+            if (savedMatrix != null && savedMatrix.getLinks() != null) {
+                System.out.println("Saved Matrix: " + savedMatrix);
+            } else {
+                System.out.println("Failed to save matrix.");
+            }
         } catch (Exception e) {
             System.err.println("Error saving matrix: " + e.getMessage());
         }
@@ -44,7 +52,7 @@ public class MatrixHandler {
             System.out.print("Enter Matrix ID to delete: ");
             Long deleteId = scanner.nextLong();
             matrixService.deleteMatrix(deleteId);
-            System.out.println("Matrix deleted");
+            System.out.println("Matrix deleted successfully.");
         } catch (Exception e) {
             System.err.println("Error deleting matrix: " + e.getMessage());
         }
@@ -57,7 +65,11 @@ public class MatrixHandler {
             System.out.print("Enter second Matrix ID: ");
             Long matrix2Id = scanner.nextLong();
             MatrixResponse addedMatrix = matrixService.addMatrices(matrix1Id, matrix2Id);
-            System.out.println("Added Matrix: " + addedMatrix);
+            if (addedMatrix != null && addedMatrix.getContent() != null) {
+                System.out.println("Added Matrix: " + addedMatrix);
+            } else {
+                System.out.println("Failed to add matrices.");
+            }
         } catch (Exception e) {
             System.err.println("Error adding matrices: " + e.getMessage());
         }
@@ -72,7 +84,11 @@ public class MatrixHandler {
             int[][] matrix1 = parseMatrix(matrix1Data);
             int[][] matrix2 = parseMatrix(matrix2Data);
             MatrixResponse addedMatrixFromBody = matrixService.addMatricesFromBody(matrix1, matrix2);
-            System.out.println("Added Matrix from Body: " + addedMatrixFromBody);
+            if (addedMatrixFromBody != null && addedMatrixFromBody.getContent() != null) {
+                System.out.println("Added Matrix from Body: " + addedMatrixFromBody);
+            } else {
+                System.out.println("Failed to add matrices from body.");
+            }
         } catch (Exception e) {
             System.err.println("Error adding matrices from body: " + e.getMessage());
         }
@@ -85,7 +101,11 @@ public class MatrixHandler {
             System.out.print("Enter degree to rotate: ");
             int degree = scanner.nextInt();
             com.procmatrix.rotation.model.MatrixResponse rotatedMatrixById = matrixService.rotateMatrixById(rotateId, degree);
-            System.out.println("Rotated Matrix by ID: " + rotatedMatrixById);
+            if (rotatedMatrixById != null && rotatedMatrixById.getContent() != null) {
+                System.out.println("Rotated Matrix by ID: " + rotatedMatrixById);
+            } else {
+                System.out.println("Failed to rotate matrix by ID.");
+            }
         } catch (Exception e) {
             System.err.println("Error rotating matrix by ID: " + e.getMessage());
         }
@@ -99,7 +119,11 @@ public class MatrixHandler {
             System.out.print("Enter degree to rotate: ");
             int rotateDegree = scanner.nextInt();
             com.procmatrix.rotation.model.MatrixResponse rotatedMatrixFromBody = matrixService.rotateMatrixFromBody(matrixToRotate, rotateDegree);
-            System.out.println("Rotated Matrix from Body: " + rotatedMatrixFromBody);
+            if (rotatedMatrixFromBody != null && rotatedMatrixFromBody.getContent() != null) {
+                System.out.println("Rotated Matrix from Body: " + rotatedMatrixFromBody);
+            } else {
+                System.out.println("Failed to rotate matrix from body.");
+            }
         } catch (Exception e) {
             System.err.println("Error rotating matrix from body: " + e.getMessage());
         }

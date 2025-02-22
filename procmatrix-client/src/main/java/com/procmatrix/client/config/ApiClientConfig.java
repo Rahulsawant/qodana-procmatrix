@@ -3,39 +3,41 @@ package com.procmatrix.client.config;
 import com.procmatrix.api.MatrixApiApi;
 import com.procmatrix.invoker.ApiClient;
 import com.procmatrix.rotation.api.MatrixRotationApiApi;
-import com.procmatrix.rotation.invoker.auth.HttpBasicAuth;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
 @Configuration
 public class ApiClientConfig {
 
-    @Value("${procmatrix.service.url}")
-    private String procmatrixServiceUrl;
+    private final String procmatrixServiceUrl;
+    private final String matrixRotationServiceUrl;
+    private final String procmatrixServiceUsername;
+    private final String procmatrixServicePassword;
+    private final String matrixRotationServiceUsername;
+    private final String matrixRotationServicePassword;
 
-    @Value("${matrixrotation.service.url}")
-    private String matrixRotationServiceUrl;
-
-    @Value("${procmatrix.service.username}")
-    private String procmatrixServiceUsername;
-
-    @Value("${procmatrix.service.password}")
-    private String procmatrixServicePassword;
-
-    @Value("${matrixrotation.service.username}")
-    private String matrixRotationServiceUsername;
-
-    @Value("${matrixrotation.service.password}")
-    private String matrixRotationServicePassword;
+    public ApiClientConfig(
+            @Value("${procmatrix.service.url}") String procmatrixServiceUrl,
+            @Value("${matrixrotation.service.url}") String matrixRotationServiceUrl,
+            @Value("${procmatrix.service.username}") String procmatrixServiceUsername,
+            @Value("${procmatrix.service.password}") String procmatrixServicePassword,
+            @Value("${matrixrotation.service.username}") String matrixRotationServiceUsername,
+            @Value("${matrixrotation.service.password}") String matrixRotationServicePassword) {
+        this.procmatrixServiceUrl = procmatrixServiceUrl;
+        this.matrixRotationServiceUrl = matrixRotationServiceUrl;
+        this.procmatrixServiceUsername = procmatrixServiceUsername;
+        this.procmatrixServicePassword = procmatrixServicePassword;
+        this.matrixRotationServiceUsername = matrixRotationServiceUsername;
+        this.matrixRotationServicePassword = matrixRotationServicePassword;
+    }
 
     @Bean
     public MatrixApiApi matrixApi() {
@@ -75,5 +77,4 @@ public class ApiClientConfig {
             return chain.proceed(authenticatedRequest);
         }
     }
-
 }

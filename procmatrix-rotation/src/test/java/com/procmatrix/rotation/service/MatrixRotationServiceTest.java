@@ -2,9 +2,9 @@ package com.procmatrix.rotation.service;
 
 import com.procmatrix.core.entity.MatrixData;
 import com.procmatrix.core.entity.MatrixRequest;
-import com.procmatrix.core.interfaces.MatrixCacheRepository;
-import com.procmatrix.core.interfaces.MatrixReadRepository;
-import com.procmatrix.core.interfaces.MatrixWriteRepository;
+import com.procmatrix.core.interfaces.repository.MatrixCacheRepository;
+import com.procmatrix.core.interfaces.repository.MatrixReadRepository;
+import com.procmatrix.core.interfaces.repository.MatrixWriteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

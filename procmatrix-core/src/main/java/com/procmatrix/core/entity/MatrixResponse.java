@@ -5,7 +5,7 @@ import org.springframework.hateoas.Link;
 
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MatrixResponse {
     private int[][] content;
     private String message;

@@ -2,14 +2,16 @@ package com.procmatrix.service;
 
 import com.procmatrix.core.entity.MatrixData;
 import com.procmatrix.core.entity.MatrixRequest;
-import com.procmatrix.core.interfaces.MatrixCacheRepository;
-import com.procmatrix.core.interfaces.MatrixReadRepository;
-import com.procmatrix.core.interfaces.MatrixWriteRepository;
+import com.procmatrix.core.interfaces.repository.MatrixCacheRepository;
+import com.procmatrix.core.interfaces.repository.MatrixReadRepository;
+import com.procmatrix.core.interfaces.repository.MatrixWriteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.stream.IntStream;
 
 /**
  * Service class for managing matrix data.
@@ -115,13 +117,13 @@ public class MatrixService {
         int cols = Math.max(matrix1[0].length, matrix2[0].length);
         int[][] result = new int[rows][cols];
 
-        for (int i = 0; i < rows; i++) {
+        IntStream.range(0, rows).parallel().forEach(i -> {
             for (int j = 0; j < cols; j++) {
                 int val1 = (i < matrix1.length && j < matrix1[i].length) ? matrix1[i][j] : 0;
                 int val2 = (i < matrix2.length && j < matrix2[i].length) ? matrix2[i][j] : 0;
                 result[i][j] = val1 + val2;
             }
-        }
+        });
         return result;
     }
 }

@@ -1,7 +1,7 @@
 package com.procmatrix.core.implementation;
 
 import com.procmatrix.core.entity.MatrixData;
-import com.procmatrix.core.interfaces.MatrixCacheRepository;
+import com.procmatrix.core.interfaces.repository.MatrixCacheRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

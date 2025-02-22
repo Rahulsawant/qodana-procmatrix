@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class MatrixDatabaseConfig {
+
     @Value("${spring.datasource.url}")
     private String datasourceUrl;
 
@@ -24,16 +25,20 @@ public class MatrixDatabaseConfig {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(datasourceUrl);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
+        try {
+            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            dataSource.setDriverClassName(driverClassName);
+            dataSource.setUrl(datasourceUrl);
+            dataSource.setUsername(username);
+            dataSource.setPassword(password);
+            return dataSource;
+        } catch (Exception e) {
+            throw new RuntimeException("Error initializing data source", e);
+        }
     }
 
-    @Bean(name="customJdbcTemplate")
-    public NamedParameterJdbcTemplate  jdbcTemplate(DataSource dataSource) {
+    @Bean(name = "customJdbcTemplate")
+    public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 }

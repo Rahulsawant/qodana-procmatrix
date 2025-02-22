@@ -4,19 +4,12 @@ package com.procmatrix.core.entity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
-import java.io.IOException;
-
 
 public class MatrixData {
 
     private Long id;
-
     @Lob
     private String data;
-
-    @Transient
-    private int[][] matrix;
-
     @Transient
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -38,22 +31,18 @@ public class MatrixData {
     }
 
     public int[][] getMatrix() {
-        if (matrix == null && data != null) {
-            try {
-                matrix = objectMapper.readValue(data, int[][].class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            return objectMapper.readValue(data, int[][].class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
-        return matrix;
     }
 
     public void setMatrix(int[][] matrix) {
-        this.matrix = matrix;
         try {
             this.data = objectMapper.writeValueAsString(matrix);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error serializing matrix data", e);
         }
     }
 }

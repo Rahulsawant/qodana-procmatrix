@@ -1,7 +1,7 @@
 package com.procmatrix.core.implementation;
 
 import com.procmatrix.core.entity.MatrixData;
-import com.procmatrix.core.interfaces.MatrixReadRepository;
+import com.procmatrix.core.interfaces.repository.MatrixReadRepository;
 import com.procmatrix.core.utils.MatrixSqlStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

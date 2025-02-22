@@ -51,9 +51,7 @@ public class MatrixAdditionController {
             }
 
             int[][] result = matrixService.addMatrices(matrix1, matrix2);
-            MatrixResponse response = MatrixResponseBuilder.buildMatrixAddResponse(result, id1, id2, MATRIX_ADDED_SUCCESSFULLY);
-            logger.debug("Successfully added matrices with IDs {} and {}", id1, id2);
-            return ResponseEntity.ok(response);
+            return buildResponse(result, id1, id2, MATRIX_ADDED_SUCCESSFULLY);
         } catch (IllegalArgumentException e) {
             return MatrixResponseBuilder.buildBadRequestResponse(e);
         } catch (Exception e) {
@@ -74,13 +72,17 @@ public class MatrixAdditionController {
         try {
             InputValidator.validateMatrixRequests(request.getMatrix1(), request.getMatrix2());
             int[][] result = matrixService.addMatrices(request.getMatrix1().getMatrix(), request.getMatrix2().getMatrix());
-            MatrixResponse response = MatrixResponseBuilder.buildMatrixAddResponse(result, null, null, MATRIX_ADDED_SUCCESSFULLY);
-            logger.debug("Successfully added matrices");
-            return ResponseEntity.ok(response);
+            return buildResponse(result, null, null, MATRIX_ADDED_SUCCESSFULLY);
         } catch (IllegalArgumentException e) {
             return MatrixResponseBuilder.buildBadRequestResponse(e);
         } catch (Exception e) {
             return MatrixResponseBuilder.buildErrorResponse(e);
         }
+    }
+
+    private ResponseEntity<MatrixResponse> buildResponse(int[][] result, Long id1, Long id2, String successMessage) {
+        MatrixResponse response = MatrixResponseBuilder.buildMatrixAddResponse(result, id1, id2, successMessage);
+        logger.debug("Successfully added matrices with IDs {} and {}", id1, id2);
+        return ResponseEntity.ok(response);
     }
 }

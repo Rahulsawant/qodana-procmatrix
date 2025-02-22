@@ -1,4 +1,4 @@
-package com.procmatrix.core.interfaces;
+package com.procmatrix.core.interfaces.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

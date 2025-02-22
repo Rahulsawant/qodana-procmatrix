@@ -4,8 +4,8 @@ import com.procmatrix.core.entity.MatrixData;
 import com.procmatrix.core.entity.MatrixResponse;
 import com.procmatrix.core.utils.InputValidator;
 import com.procmatrix.rotation.entity.RotateMatrixRequest;
-import com.procmatrix.rotation.utils.MatrixResponseBuilder;
 import com.procmatrix.rotation.service.MatrixRotationService;
+import com.procmatrix.rotation.utils.MatrixResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,7 @@ public class MatrixRotationController {
 
     private static final Logger logger = LoggerFactory.getLogger(MatrixRotationController.class);
 
-
-    private MatrixRotationService matrixRotationService;
+    private final MatrixRotationService matrixRotationService;
 
     @Autowired
     public MatrixRotationController(MatrixRotationService matrixRotationService) {
@@ -32,17 +31,13 @@ public class MatrixRotationController {
     public ResponseEntity<MatrixResponse> rotateMatrix(@PathVariable(name = "id") Long id, @RequestParam(name = "degree", defaultValue = "90") int degree) {
         logger.debug("Received request to rotate matrix with ID {} by {} degrees", id, degree);
         try {
-            if (degree % 90 != 0) {
-                return MatrixResponseBuilder.buildBadRequestResponse(id, new IllegalArgumentException(MatrixResponseBuilder.ResponseMessages.MATRIX_DEGREE_MULTIPLE_OF_90));
-            }
+            validateDegree(degree);
             int[][] matrix = matrixRotationService.getMatrix(id);
             if (matrix == null) {
                 return MatrixResponseBuilder.buildNotFoundResponse(id);
             }
             int[][] rotatedMatrix = matrixRotationService.rotateMatrix(matrix, degree);
-            MatrixResponse response = MatrixResponseBuilder.buildMatrixResponse(rotatedMatrix, id, MatrixResponseBuilder.ResponseMessages.MATRIX_ROTATED_SUCCESSFULLY);
-            logger.debug("Successfully rotated matrix with ID {}", id);
-            return ResponseEntity.ok(response);
+            return buildResponse(rotatedMatrix, id, MatrixResponseBuilder.ResponseMessages.MATRIX_ROTATED_SUCCESSFULLY);
         } catch (IllegalArgumentException e) {
             return MatrixResponseBuilder.buildBadRequestResponse(id, e);
         } catch (Exception e) {
@@ -57,17 +52,28 @@ public class MatrixRotationController {
         try {
             InputValidator.validateMatrixRequest(matrixRequest);
             int[][] rotatedMatrix = matrixRotationService.rotateMatrix(matrixRequest.getMatrix(), matrixRequest.getDegree());
-            MatrixData matrixData=matrixRotationService.saveMatrix(matrixRequest);
-            if(matrixData == null){
+            MatrixData matrixData = matrixRotationService.saveMatrix(matrixRequest);
+            if (matrixData == null) {
                 logger.error("Failed to save matrix, we'll just return rotated matrix to user");
-                return ResponseEntity.ok(MatrixResponseBuilder.buildMatrixResponse(rotatedMatrix, null, MatrixResponseBuilder.ResponseMessages.MATRIX_ROTATED_SUCCESSFULLY));
+                return buildResponse(rotatedMatrix, null, MatrixResponseBuilder.ResponseMessages.MATRIX_ROTATED_SUCCESSFULLY);
             }
-            logger.debug("Successfully stored and rotated matrix with ID {}", matrixData.getId());
-            return ResponseEntity.ok(MatrixResponseBuilder.buildMatrixResponse(rotatedMatrix, matrixData.getId(), MatrixResponseBuilder.ResponseMessages.MATRIX_STORED_AND_ROTATED));
+            return buildResponse(rotatedMatrix, matrixData.getId(), MatrixResponseBuilder.ResponseMessages.MATRIX_STORED_AND_ROTATED);
         } catch (IllegalArgumentException e) {
             return MatrixResponseBuilder.buildBadRequestResponse(e);
         } catch (Exception e) {
             return MatrixResponseBuilder.buildErrorResponse(e);
         }
+    }
+
+    private void validateDegree(int degree) {
+        if (degree % 90 != 0) {
+            throw new IllegalArgumentException(MatrixResponseBuilder.ResponseMessages.MATRIX_DEGREE_MULTIPLE_OF_90);
+        }
+    }
+
+    private ResponseEntity<MatrixResponse> buildResponse(int[][] matrix, Long id, String successMessage) {
+        MatrixResponse response = MatrixResponseBuilder.buildMatrixResponse(matrix, id, successMessage);
+        logger.debug("Successfully processed matrix with ID {}", id);
+        return ResponseEntity.ok(response);
     }
 }

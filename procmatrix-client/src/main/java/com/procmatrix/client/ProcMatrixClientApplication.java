@@ -61,6 +61,8 @@ public class ProcMatrixClientApplication implements CommandLineRunner {
                     break;
                 case 8:
                     System.out.println("Exiting...");
+                    scanner.close();
+                    System.exit(0);
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");

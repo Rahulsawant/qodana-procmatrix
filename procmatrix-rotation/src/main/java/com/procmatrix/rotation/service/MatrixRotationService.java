@@ -2,9 +2,9 @@ package com.procmatrix.rotation.service;
 
 import com.procmatrix.core.entity.MatrixData;
 import com.procmatrix.core.entity.MatrixRequest;
-import com.procmatrix.core.interfaces.MatrixCacheRepository;
-import com.procmatrix.core.interfaces.MatrixReadRepository;
-import com.procmatrix.core.interfaces.MatrixWriteRepository;
+import com.procmatrix.core.interfaces.repository.MatrixCacheRepository;
+import com.procmatrix.core.interfaces.repository.MatrixReadRepository;
+import com.procmatrix.core.interfaces.repository.MatrixWriteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.stream.IntStream;
 
 @Service
 public class MatrixRotationService {
@@ -65,13 +67,16 @@ public class MatrixRotationService {
 
 
     /**
-     * Rotates a matrix by the specified degree.
-     *  1.first For 90° and 270° rotation, swap the rows and columns.
-     *  2.Iterate through each element, in a loop
-     *      2.1 190°: The element at (i, j) in the original matrix moves to (j, rows - 1 - i) in the rotated matrix.
-     *      2.2 180°: The element at (i, j) moves to (rows - 1 - i, cols - 1 - j).
-     *      2.3 270°: The element at (i, j) moves to (cols - 1 - j, i).
-     *      2.4 0° or 360°: The matrix remains unchanged.
+     * 1. Validate the degree to ensure it is a multiple of 90.
+     * 2. Determine the dimensions of the rotated matrix.
+     * 3. Use parallel streams to iterate through each element of the matrix and perform the rotation.
+     * Rotation logic:
+     * 1 For 90° and 270° rotation, swap the rows and columns.
+     * 2 Iterate through each element:
+     *   2.1 90°: The element at (i, j) in the original matrix moves to (j, rows - 1 - i) in the rotated matrix.
+     *   2.2 180°: The element at (i, j) moves to (rows - 1 - i, cols - 1 - j).
+     *   2.3 270°: The element at (i, j) moves to (cols - 1 - j, i).
+     *   2.4 0° or 360°: The matrix remains unchanged.
      * @param matrix the matrix to rotate
      * @param degree the degree to rotate the matrix by
      * @return the rotated matrix
@@ -90,7 +95,8 @@ public class MatrixRotationService {
             } else {
                 rotatedMatrix = new int[rows][cols];
             }
-            for (int i = 0; i < rows; i++) {
+
+            IntStream.range(0, rows).parallel().forEach(i -> {
                 for (int j = 0; j < cols; j++) {
                     if (degree == 90) {
                         rotatedMatrix[j][rows - 1 - i] = matrix[i][j];
@@ -102,7 +108,7 @@ public class MatrixRotationService {
                         rotatedMatrix[i][j] = matrix[i][j];
                     }
                 }
-            }
+            });
             return rotatedMatrix;
         } catch (IllegalArgumentException e) {
             logger.warn("Invalid degree: {}", degree, e);
